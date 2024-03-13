@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+
+const port = process.env.PORT || 3000; 
 
 app.use(express.json());
 
@@ -78,9 +79,7 @@ app.post('/transacciones', (req, res) => {
 });
 
 
-
-
-
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
+
