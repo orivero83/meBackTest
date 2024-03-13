@@ -4,13 +4,19 @@ import mysql from 'mysql2';
 import cors from 'cors';
 
 
-
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-// Usa cors como middleware antes de definir tus rutas
-app.use(cors());
+
+
+// Usa cors con opciones específicas
+const frontendURL = 'https://mercadopagotest.medidasdigitales.com';
+app.use(cors({
+  origin: frontendURL,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
 
 
 // Configuración de la conexión a la base de datos
