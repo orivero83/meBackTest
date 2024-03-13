@@ -29,6 +29,7 @@ const connection = mysql.createConnection({
   database: process.env.DB_DATABASE,
 });
 
+
 // Conectar a la base de datos
 connection.connect((err) => {
   if (err) {
@@ -68,9 +69,18 @@ app.post('/transacciones', (req, res) => {
       'INSERT INTO transacciones (tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona],
       (error, results) => {
+        if (error) {
+          console.error('Error al ejecutar la consulta:', error);
+          res.status(500).send('Internal Server Error');
+          return;
+        }
 
-        // Enviar respuesta exitosa al cliente
-        res.status(201).json({ message: 'Transacción creada con éxito', id: results.insertId });
+        // Verificar si la inserción fue exitosa y enviar respuesta
+        if (results && results.insertId !== undefined) {
+          res.status(201).json({ message: 'Transacción creada con éxito', id: results.insertId });
+        } else {
+          res.status(500).send('Error al procesar la solicitud');
+        }
       });
   } catch (error) {
     console.error('Error al procesar la solicitud:', error);
@@ -79,7 +89,8 @@ app.post('/transacciones', (req, res) => {
 });
 
 
+
 app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+  console.log(`Servidor escuchando en port: ${port}`);
 });
 
