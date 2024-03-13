@@ -21,10 +21,10 @@ app.use(cors({
 
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'mercadopago',
+  host: 'medidasdigitales.com',
+  user: 'u693947377_mercadodbtest',
+  password: 'Mercadodbtest1.',
+  database: 'u693947377_mercadopago',
 });
 
 // Conectar a la base de datos
