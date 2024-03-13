@@ -2,7 +2,8 @@
 import express from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -21,10 +22,10 @@ app.use(cors({
 
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
-  host: 'medidasdigitales.com',
-  user: 'u693947377_mercadodbtest',
-  password: 'Mercadodbtest1.',
-  database: 'u693947377_mercadopago',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 // Conectar a la base de datos
@@ -57,22 +58,22 @@ app.get('/transacciones', (req, res) => {
 // Ruta para crear una nueva transacción (POST)
 app.post('/transacciones', (req, res) => {
   try {
-      const nuevaTransaccion = req.body;
+    const nuevaTransaccion = req.body;
 
-      // Realizar la inserción en la base de datos
-      const { tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona } = nuevaTransaccion;
+    // Realizar la inserción en la base de datos
+    const { tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona } = nuevaTransaccion;
 
-      connection.query(
-        'INSERT INTO transacciones (tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona],
-        (error, results) => {
+    connection.query(
+      'INSERT INTO transacciones (tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [tipo_pago, estado, monto, moneda, id_pago, id_usuario, nombre_persona, email_persona],
+      (error, results) => {
 
-          // Enviar respuesta exitosa al cliente
-          res.status(201).json({ message: 'Transacción creada con éxito', id: results.insertId });
+        // Enviar respuesta exitosa al cliente
+        res.status(201).json({ message: 'Transacción creada con éxito', id: results.insertId });
       });
   } catch (error) {
-      console.error('Error al procesar la solicitud:', error);
-      res.status(500).send('Internal Server Error');
+    console.error('Error al procesar la solicitud:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
